@@ -10,7 +10,12 @@ function App() {
 	const [gender, setGender] = useState('male');
 	const [history, setHistory] = useState(1);
 	const [comp, setComp] = useState('');
+	const [complaint_accept, setAcceptList] = useState('');
+	const [complaint_deny, setDenyList] = useState('');
+	const [success, setSuccess] = useState('with');
+	const [treating, setTreating] = useState(false);
 	const chief = useRef({});
+	const symp = useRef({});
 
 	const genders = ['male', 'female'];
 	const days = [1, 2, 3, 4, 5, 6, 7];
@@ -24,6 +29,12 @@ function App() {
 			data[item] = false;
 		})
 		chief.current = data; 	
+
+		var data1 = {};
+		symptoms.forEach(item => {
+			data[item] = 0;
+		});
+		symp.current = data1;
 	}, []);
 
 
@@ -50,13 +61,42 @@ function App() {
 		
 		// generate the string
 		const result = complaints.filter(item => value[item]);
-		console.log(value);
-		const text = result.join(", ");
-		console.log(text);
-
+		const text = result.join(", ");		
 		setComp(text);
 
 		chief.current = value;
+	}
+
+	const onSymptomChange = (item, e) => {
+		console.log(item, e.target.value);
+		var value = symp.current;
+
+		const option = e.target.value;
+		if( option == 'Yes' )
+			value[item] = 0;
+		if( option == 'No' )
+			value[item] = 1;
+		if( option == 'N/A' )
+			value[item] = 2;
+
+		const result1 = symptoms.filter(item => value[item] == 0);
+		const text1 = result1.join(", ");		
+		setAcceptList(text1);
+
+		const result2 = symptoms.filter(item => value[item] == 1);
+		const text2 = result2.join(", ");		
+		setDenyList(text2);
+
+		chief.current = value;
+		
+	}
+
+	const onSuccessChange = (item) => {
+		setSuccess(item == 'yes' ? 'with' : 'widthout');
+	}
+
+	const onTreatingChange = (e) => {
+		setTreating(e.target.checked);
 	}
 
 	return (
@@ -117,7 +157,7 @@ function App() {
 						<label>Symptoms</label>			
 						{
 							symptoms.map(item => (
-								<RadioRows key={item} label={item} />
+								<RadioRows key={item} label={item} onSymptomChange={onSymptomChange} />
 							))
 						}					
 						
@@ -125,7 +165,7 @@ function App() {
 
 					<div className="row">
 						<label>
-							<input type="checkbox" name="treating" value="true"/>
+							<input type="checkbox" name="treating" checked={treating} onChange={(e) => onTreatingChange(e) }/>
 							treating
 						</label>			
 						<div style={{marginLeft: 10, marginTop: 10}}>
@@ -134,7 +174,7 @@ function App() {
 								yesno.map(item => (
 									<div className="radio" key={item}>
 										<label>
-											<input type="radio" name="successful" value={item}/>
+											<input type="radio" name="successful" value={item} onChange={() => onSuccessChange(item)}/>
 											{item}
 										</label>
 									</div>
@@ -149,6 +189,12 @@ function App() {
 					<br/>
 					{name} is a {age}-year-old {gender} who came to my office on 12/03/2019 and he has a {history}-day history of {comp}.
 					<br />
+					He complaints of {complaint_accept} but denies {complaint_deny}
+					<br/>
+					{
+						treating &&
+						"He has been treating with typlenol " + success + " Success."
+					}	
 				</div>
 			</div>		
 		</div>
