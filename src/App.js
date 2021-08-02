@@ -7,6 +7,7 @@ function App() {
 	const days = [1, 2, 3, 4, 5, 6, 7];
 	const complaints = ['asthma', 'fever', 'score throat', 'cough', 'diarrhea'];
 	const symptoms = ['runny nose', 'headache', 'couch', 'fevers', 'chills', 'gastrointestinal symptoms'];
+	const yesno = ['yes', 'no'];
 	
 	return (
 		<div>
@@ -70,6 +71,26 @@ function App() {
 							))
 						}					
 						
+					</div>
+
+					<div className="row">
+						<label>
+							<input type="checkbox" name="treating" value="true"/>
+							treating
+						</label>			
+						<div style={{marginLeft: 10, marginTop: 10}}>
+							<label>Successful?</label>
+							{
+								yesno.map(item => (
+									<div className="radio" key={item}>
+										<label>
+											<input type="radio" name="successful" value={item}/>
+											{item}
+										</label>
+									</div>
+								))
+							}
+						</div>
 					</div>
 
 				</div>
