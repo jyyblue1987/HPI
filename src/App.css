@@ -37,3 +37,10 @@ table {
 .row {
 	margin-top: 10px;
 }
+
+.print {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	margin: 30px;
+}

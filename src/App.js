@@ -1,8 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import {useState, useRef, useEffect} from 'react';
-
 import RadioRows from './RadioRows';
+import {useReactToPrint} from 'react-to-print';
 
 function App() {
 	const [name, setName] = useState('');
@@ -16,6 +16,7 @@ function App() {
 	const [treating, setTreating] = useState(false);
 	const chief = useRef({});
 	const symp = useRef({});
+	const rightPanelRef = useRef();
 
 	const genders = ['male', 'female'];
 	const days = [1, 2, 3, 4, 5, 6, 7];
@@ -98,6 +99,10 @@ function App() {
 	const onTreatingChange = (e) => {
 		setTreating(e.target.checked);
 	}
+
+	const onClickPrint = useReactToPrint({
+		content: () => rightPanelRef.current
+	})
 
 	return (
 		<div>
@@ -184,7 +189,7 @@ function App() {
 					</div>
 
 				</div>
-				<div className="right panel">
+				<div className="right panel" ref={rightPanelRef}>
 					HPI
 					<br/>
 					{name} is a {age}-year-old {gender} who came to my office on 12/03/2019 and he has a {history}-day history of {comp}.
@@ -194,8 +199,9 @@ function App() {
 					{
 						treating &&
 						"He has been treating with typlenol " + success + " Success."
-					}	
+					}						
 				</div>
+				<button className="print" onClick={() => onClickPrint()}>Print</button>
 			</div>		
 		</div>
 	);
